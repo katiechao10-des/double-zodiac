@@ -650,7 +650,7 @@ export default function App() {
                 <div className="result-footer">
                   Your signs don't agree. Now what?
                   <br />
-                  <span style={{ opacity: 0.6 }}>East Says Horse — by Katie Chao</span>
+                  <span style={{ opacity: 0.6 }}>East Says Horse — by <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a></span>
                 </div>
               </div>
 
