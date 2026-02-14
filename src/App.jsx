@@ -49,16 +49,18 @@ const LNY_DATES = {
 };
 
 function getWesternSign(month, day) {
-  const cutoffs = [
-    [1,20],[2,19],[3,21],[4,20],[5,21],[6,21],[7,23],[8,23],[9,23],[10,23],[11,22],[12,22]
+  // Each entry: [startMonth, startDay, signIndex]
+  const ranges = [
+    [1,20,1],[2,19,2],[3,21,3],[4,20,4],[5,21,5],[6,21,6],
+    [7,23,7],[8,23,8],[9,23,9],[10,23,10],[11,22,11],[12,22,0]
   ];
   for (let i = 11; i >= 0; i--) {
-    const [m, d] = cutoffs[i];
+    const [m, d, si] = ranges[i];
     if (month > m || (month === m && day >= d)) {
-      return WESTERN_SIGNS[i];
+      return WESTERN_SIGNS[si];
     }
   }
-  return WESTERN_SIGNS[0]; // Capricorn
+  return WESTERN_SIGNS[0]; // Capricorn (born Jan 1-19)
 }
 
 function getChineseAnimal(year, month, day) {
@@ -648,7 +650,7 @@ export default function App() {
                 <div className="result-footer">
                   Your signs don't agree. Now what?
                   <br />
-                  <span style={{ opacity: 0.6 }}>East Says Horse — by Katie</span>
+                  <span style={{ opacity: 0.6 }}>East Says Horse — by Katie Chao</span>
                 </div>
               </div>
 
