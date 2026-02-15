@@ -680,7 +680,7 @@ export default function App() {
             </button>
 
             <div className="header" style={{ marginBottom: 36 }}>
-              <div className="header-label">East Says Horse</div>
+              <div className="header-label">Parallax</div>
               <h1 className="header-title" style={{ fontSize: 40 }}>
                 How it <em>works.</em>
               </h1>
@@ -764,7 +764,7 @@ export default function App() {
               </button>
               <br />
               <p className="hiw-footer">
-                East Says Horse — by <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>
+                Parallax — by <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>
               </p>
             </div>
           </div>
@@ -786,7 +786,7 @@ export default function App() {
           {!showResult ? (
             <>
               <div className="header">
-                <div className="header-label">East Says Horse</div>
+                <div className="header-label">Parallax</div>
                 <h1 className="header-title">
                   Double <em>Zodiac.</em>
                 </h1>
@@ -854,7 +854,7 @@ export default function App() {
                 <div className="result-footer">
                   Your signs don't agree. <button className="now-what-link" onClick={() => setShowHowItWorks(true)}>Now what?</button>
                   <br />
-                  <span style={{ opacity: 0.6 }}>East Says Horse — by <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a></span>
+                  <span style={{ opacity: 0.6 }}>Parallax — by <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a></span>
                 </div>
               </div>
 
