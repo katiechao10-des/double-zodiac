@@ -546,6 +546,91 @@ style.textContent = `
     .result-combo-name { font-size: 26px; }
     .result-clash-line { font-size: 17px; }
     .result-breakdown { gap: 32px; }
+    .hiw-heading { font-size: 22px; }
+  }
+
+  /* ── How it works link ── */
+  .how-link {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 16px;
+    transition: color 0.3s ease;
+  }
+
+  .how-link:hover { color: var(--red); }
+
+  /* ── Now what link in results ── */
+  .now-what-link {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--red);
+    background: none;
+    border: none;
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: border-color 0.3s ease;
+    letter-spacing: 0.5px;
+  }
+
+  .now-what-link:hover { border-bottom-color: var(--red); }
+
+  /* ── How It Works page ── */
+  .hiw-content { max-width: 560px; }
+
+  .hiw-section { margin-bottom: 8px; }
+
+  .hiw-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  .hiw-body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--ink-light);
+    line-height: 1.75;
+    margin-bottom: 14px;
+  }
+
+  .hiw-aside {
+    font-style: italic;
+    color: var(--ink-faint);
+  }
+
+  .hiw-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    margin: 32px 0;
+    opacity: 0.4;
+  }
+
+  .hiw-footer {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .hiw-footer a {
+    color: var(--red);
+    text-decoration: none;
   }
 `;
 document.head.appendChild(style);
@@ -556,6 +641,7 @@ export default function App() {
   const [birthday, setBirthday] = useState("");
   const [result, setResult] = useState(null);
   const [showResult, setShowResult] = useState(false);
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
 
   function handleReveal() {
     if (!birthday) return;
@@ -572,6 +658,118 @@ export default function App() {
     setShowResult(false);
     setResult(null);
     setBirthday("");
+  }
+
+  function handleBackFromHIW() {
+    setShowHowItWorks(false);
+  }
+
+  if (showHowItWorks) {
+    return (
+      <>
+        <div className="ornament ornament-tl" />
+        <div className="ornament ornament-tr" />
+        <div className="ornament ornament-bl" />
+        <div className="ornament ornament-br" />
+
+        <div className="page">
+          <div className="content hiw-content">
+            <button className="try-again-btn" onClick={handleBackFromHIW} style={{ marginBottom: 24 }}>
+              ← Back
+            </button>
+
+            <div className="header" style={{ marginBottom: 36 }}>
+              <div className="header-label">East Says Horse</div>
+              <h1 className="header-title" style={{ fontSize: 40 }}>
+                How it <em>works.</em>
+              </h1>
+            </div>
+
+            <div className="hiw-section">
+              <h2 className="hiw-heading">You have two zodiacs. They've never met.</h2>
+              <p className="hiw-body">
+                Western astrology and the Chinese zodiac are two of the oldest personality systems on earth. They were developed thousands of miles apart, using completely different logic, looking at completely different skies. And they've been quietly disagreeing about who you are since the day you were born.
+              </p>
+            </div>
+
+            <div className="hiw-divider" />
+
+            <div className="hiw-section">
+              <h2 className="hiw-heading">The West reads your month.</h2>
+              <p className="hiw-body">
+                Western astrology — the one you probably know — is based on the position of the sun at the moment of your birth. The year is divided into twelve signs, each lasting roughly a month: Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, Pisces.
+              </p>
+              <p className="hiw-body">
+                Your sign is tied to a constellation, an element (fire, earth, air, or water), and a set of personality traits that are supposed to explain how you think, love, and move through the world.
+              </p>
+              <p className="hiw-body hiw-aside">
+                When someone at a party asks "what's your sign?" — this is the one they mean.
+              </p>
+            </div>
+
+            <div className="hiw-divider" />
+
+            <div className="hiw-section">
+              <h2 className="hiw-heading">The East reads your year.</h2>
+              <p className="hiw-body">
+                The Chinese zodiac works on a completely different clock. Instead of months, it runs on a twelve-year cycle, with each year assigned to an animal: Rat, Ox, Tiger, Rabbit, Dragon, Snake, Horse, Goat, Monkey, Rooster, Dog, Pig.
+              </p>
+              <p className="hiw-body">
+                Your animal isn't based on the stars — it's based on the lunar calendar, tied to a myth about a great race where twelve animals competed for their place in the cycle. The Rat won by riding the Ox and jumping off at the finish line. The Pig came last because it stopped for a snack.
+              </p>
+              <p className="hiw-body">
+                Each animal carries its own personality, its own strengths, its own warnings. And unlike Western astrology, which resets every month, your Chinese sign is shared by everyone born in your year — an entire generation marked by the same animal.
+              </p>
+            </div>
+
+            <div className="hiw-divider" />
+
+            <div className="hiw-section">
+              <h2 className="hiw-heading">So what's the problem?</h2>
+              <p className="hiw-body">
+                The problem is that these two systems almost never agree.
+              </p>
+              <p className="hiw-body">
+                Western astrology might call you cautious and analytical. The Chinese zodiac might call you reckless and free. One says you crave stability. The other says you can't sit still. Same person, same birthday, two completely opposite readings.
+              </p>
+              <p className="hiw-body">
+                That's your Double Zodiac — the collision between what the West says you are and what the East says you are. There are 144 possible combinations (12 Western signs × 12 Chinese animals), and every person on earth falls into exactly one of them.
+              </p>
+            </div>
+
+            <div className="hiw-divider" />
+
+            <div className="hiw-section">
+              <h2 className="hiw-heading">What does your Double Zodiac mean?</h2>
+              <p className="hiw-body">
+                It means you're more complicated than one system can explain.
+              </p>
+              <p className="hiw-body">
+                Your Double Zodiac isn't a diagnosis. It's a contradiction — and contradictions are where the interesting stuff lives. The tension between your two signs is where your personality gets its texture, its friction, its depth.
+              </p>
+              <p className="hiw-body">
+                Maybe your Western sign is the version of you that shows up at work, and your Chinese sign is the version that comes out at midnight. Maybe one is who you're trying to be and the other is who you can't help being. Maybe they take turns.
+              </p>
+              <p className="hiw-body">
+                This tool isn't here to tell you who you are. It's here to show you that two ancient civilizations tried, and they couldn't agree.
+              </p>
+            </div>
+
+            <div className="hiw-divider" />
+
+            <div className="hiw-section" style={{ textAlign: "center" }}>
+              <button className="reveal-btn" onClick={handleBackFromHIW}>
+                Find your Double Zodiac
+              </button>
+              <br />
+              <p className="hiw-footer">
+                East Says Horse — by <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </>
+    );
   }
 
   return (
@@ -615,6 +813,10 @@ export default function App() {
                 >
                   Reveal your crisis
                 </button>
+                <br />
+                <button className="how-link" onClick={() => setShowHowItWorks(true)}>
+                  How it works
+                </button>
               </div>
             </>
           ) : (
@@ -648,7 +850,7 @@ export default function App() {
                 </div>
 
                 <div className="result-footer">
-                  Your signs don't agree. Now what?
+                  Your signs don't agree. <button className="now-what-link" onClick={() => setShowHowItWorks(true)}>Now what?</button>
                   <br />
                   <span style={{ opacity: 0.6 }}>East Says Horse — by <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a></span>
                 </div>
