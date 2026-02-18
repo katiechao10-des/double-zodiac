@@ -289,7 +289,24 @@ style.textContent = `
     letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .header-definition {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--gold);
+    opacity: 0.7;
     margin-bottom: 16px;
+    line-height: 1.6;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .header-definition em {
+    font-style: italic;
   }
 
   .header-title {
@@ -681,6 +698,7 @@ export default function App() {
 
             <div className="header" style={{ marginBottom: 36 }}>
               <div className="header-label">Parallax</div>
+              <div className="header-definition">par·al·lax · /ˈperəˌlaks/ · <em>noun</em> · the effect whereby the position or direction of an object appears to differ when viewed from different positions.</div>
               <h1 className="header-title" style={{ fontSize: 40 }}>
                 How it <em>works.</em>
               </h1>
@@ -691,6 +709,9 @@ export default function App() {
               <p className="hiw-body">
                 Western astrology and the Chinese zodiac are two of the oldest personality systems on earth. They were developed thousands of miles apart, using completely different logic, looking at completely different skies. And they've been quietly disagreeing about who you are since the day you were born.
               </p>
+              <p className="hiw-body">
+                I built this because I kept noticing the same thing in life: everybody's got a Co-Star notification on their phone, but nobody talks about the other zodiac–the one that runs on years, not months. Half the people I know plan their week around Mercury retrograde but couldn't tell you their Chinese animal. That felt like a gap, and I intend to fill it.
+              </p>
             </div>
 
             <div className="hiw-divider" />
@@ -698,13 +719,10 @@ export default function App() {
             <div className="hiw-section">
               <h2 className="hiw-heading">The West reads your month.</h2>
               <p className="hiw-body">
-                Western astrology — the one you probably know — is based on the position of the sun at the moment of your birth. The year is divided into twelve signs, each lasting roughly a month: Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, Pisces.
+                Western astrology, the one you probably know, is based on the position of the sun at the moment of your birth. The year is divided into twelve signs, each lasting roughly a month: Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, Pisces.
               </p>
               <p className="hiw-body">
-                Your sign is tied to a constellation, an element (fire, earth, air, or water), and a set of personality traits that are supposed to explain how you think, love, and move through the world.
-              </p>
-              <p className="hiw-body hiw-aside">
-                When someone at a party asks "what's your sign?" — this is the one they mean.
+                Your sign is tied to a constellation, an element (fire, earth, air, or water), and a set of personality traits that are supposed to explain how you think, create, and move through the world. In advertising, it's the sign that explains why you either thrive in brainstorms or need to be left alone with a blank doc.
               </p>
             </div>
 
@@ -716,10 +734,10 @@ export default function App() {
                 The Chinese zodiac works on a completely different clock. Instead of months, it runs on a twelve-year cycle, with each year assigned to an animal: Rat, Ox, Tiger, Rabbit, Dragon, Snake, Horse, Goat, Monkey, Rooster, Dog, Pig.
               </p>
               <p className="hiw-body">
-                Your animal isn't based on the stars — it's based on the lunar calendar, tied to a myth about a great race where twelve animals competed for their place in the cycle. The Rat won by riding the Ox and jumping off at the finish line. The Pig came last because it stopped for a snack.
+                Your animal isn't based on the stars, it's based on the lunar calendar, tied to a myth about a great race where twelve animals competed for their place in the cycle. The Rat won by riding the Ox and jumping off at the finish line. The Pig came last because it stopped for a snack. Honestly, the Pig sounds like most creatives on a Friday.
               </p>
               <p className="hiw-body">
-                Each animal carries its own personality, its own strengths, its own warnings. And unlike Western astrology, which resets every month, your Chinese sign is shared by everyone born in your year — an entire generation marked by the same animal.
+                Each animal carries its own personality, its own strengths, its own warnings. And unlike Western astrology, which resets every month, your Chinese sign is shared by everyone born in your year; an entire generation of creatives marked by the same animal energy.
               </p>
             </div>
 
@@ -731,10 +749,10 @@ export default function App() {
                 The problem is that these two systems almost never agree.
               </p>
               <p className="hiw-body">
-                Western astrology might call you cautious and analytical. The Chinese zodiac might call you reckless and free. One says you crave stability. The other says you can't sit still. Same person, same birthday, two completely opposite readings.
+                Western astrology might call you cautious and analytical, the kind of creative who proofs the deck three times before the tissue session. The Chinese zodiac might call you reckless and free, the kind who scraps the whole campaign at midnight because the idea wasn't brave enough. One says you crave structure. The other says you can't sit through a status meeting. Same person, same birthday, two completely opposite readings.
               </p>
               <p className="hiw-body">
-                That's your Double Zodiac — the collision between what the West says you are and what the East says you are. There are 144 possible combinations (12 Western signs × 12 Chinese animals), and every person on earth falls into exactly one of them.
+                That's your Double Zodiac. The collision between what the West says you are and what the East says you are. There are 144 possible combinations (12 Western signs × 12 Chinese animals), and every creative on earth falls into exactly one of them.
               </p>
             </div>
 
@@ -743,16 +761,25 @@ export default function App() {
             <div className="hiw-section">
               <h2 className="hiw-heading">What does your Double Zodiac mean?</h2>
               <p className="hiw-body">
-                It means you're more complicated than one system can explain.
+                It means you're more complicated than one system (or one job title) can explain.
               </p>
               <p className="hiw-body">
-                Your Double Zodiac isn't a diagnosis. It's a contradiction — and contradictions are where the interesting stuff lives. The tension between your two signs is where your personality gets its texture, its friction, its depth.
+                Your Double Zodiac isn't a diagnosis. It's a contradiction. If, like me, you (want to) work in advertising, you already know that contradictions are where the interesting stuff lives. The tension between your two signs is where your creative voice gets its texture, its friction, its edge.
               </p>
               <p className="hiw-body">
-                Maybe your Western sign is the version of you that shows up at work, and your Chinese sign is the version that comes out at midnight. Maybe one is who you're trying to be and the other is who you can't help being. Maybe they take turns.
+                Maybe your Western sign is the version of you that shows up in the client meeting, and your Chinese sign is the one that comes out at 2 AM when you're actually making the work. Maybe one is the creative you're trying to become and the other is the one you can't help being. Maybe they take turns depending on the brief.
+              </p>
+            </div>
+
+            <div className="hiw-divider" />
+
+            <div className="hiw-section">
+              <h2 className="hiw-heading">What's parallax got to do with all this?</h2>
+              <p className="hiw-body">
+                Like parallax helps us learn more about objects by seeing them from different angles, I believe our Double Zodiac can help us learn more about ourselves.
               </p>
               <p className="hiw-body">
-                This tool isn't here to tell you who you are. It's here to show you that two ancient civilizations tried, and they couldn't agree.
+                This tool isn't here to tell you who you are. It's here to show you that two ancient civilizations tried, and they couldn't agree. If that's not a perfect metaphor for getting feedback from two different CDs and having no idea (or too many ideas) of what to do next, I don't know what is.
               </p>
             </div>
 
@@ -764,7 +791,7 @@ export default function App() {
               </button>
               <br />
               <p className="hiw-footer">
-                Parallax — by <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>
+                Parallax — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director
               </p>
             </div>
           </div>
@@ -787,6 +814,7 @@ export default function App() {
             <>
               <div className="header">
                 <div className="header-label">Parallax</div>
+                <div className="header-definition">par·al·lax · /ˈperəˌlaks/ · <em>noun</em> · the effect whereby the position or direction of an object appears to differ when viewed from different positions.</div>
                 <h1 className="header-title">
                   Double <em>Zodiac.</em>
                 </h1>
@@ -854,7 +882,7 @@ export default function App() {
                 <div className="result-footer">
                   Your signs don't agree. <button className="now-what-link" onClick={() => setShowHowItWorks(true)}>Now what?</button>
                   <br />
-                  <span style={{ opacity: 0.6 }}>Parallax — by <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a></span>
+                  <span style={{ opacity: 0.6 }}>Parallax — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director</span>
                 </div>
               </div>
 
