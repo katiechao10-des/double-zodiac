@@ -680,7 +680,7 @@ export default function App() {
             </button>
 
             <div className="header" style={{ marginBottom: 36 }}>
-              <div className="header-label">ADstrology</div>
+              <div className="header-label">Adstrology</div>
               <h1 className="header-title" style={{ fontSize: 40 }}>
                 How it <em>works.</em>
               </h1>
