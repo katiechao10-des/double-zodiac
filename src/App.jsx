@@ -292,23 +292,6 @@ style.textContent = `
     margin-bottom: 8px;
   }
 
-  .header-definition {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    font-weight: 300;
-    color: var(--gold);
-    opacity: 0.7;
-    margin-bottom: 16px;
-    line-height: 1.6;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .header-definition em {
-    font-style: italic;
-  }
-
   .header-title {
     font-family: 'Cormorant Garamond', serif;
     font-size: 52px;
@@ -697,8 +680,7 @@ export default function App() {
             </button>
 
             <div className="header" style={{ marginBottom: 36 }}>
-              <div className="header-label">Parallax</div>
-              <div className="header-definition">par·al·lax · /ˈperəˌlaks/ · <em>noun</em> · the effect whereby the position or direction of an object appears to differ when viewed from different positions.</div>
+              <div className="header-label">ADstrology</div>
               <h1 className="header-title" style={{ fontSize: 40 }}>
                 How it <em>works.</em>
               </h1>
@@ -773,25 +755,13 @@ export default function App() {
 
             <div className="hiw-divider" />
 
-            <div className="hiw-section">
-              <h2 className="hiw-heading">What's parallax got to do with all this?</h2>
-              <p className="hiw-body">
-                Like parallax helps us learn more about objects by seeing them from different angles, I believe our Double Zodiac can help us learn more about ourselves.
-              </p>
-              <p className="hiw-body">
-                This tool isn't here to tell you who you are. It's here to show you that two ancient civilizations tried, and they couldn't agree. If that's not a perfect metaphor for getting feedback from two different CDs and having no idea (or too many ideas) of what to do next, I don't know what is.
-              </p>
-            </div>
-
-            <div className="hiw-divider" />
-
             <div className="hiw-section" style={{ textAlign: "center" }}>
               <button className="reveal-btn" onClick={handleBackFromHIW}>
                 Find your Double Zodiac
               </button>
               <br />
               <p className="hiw-footer">
-                Parallax — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director
+                ADstrology — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director
               </p>
             </div>
           </div>
@@ -813,8 +783,7 @@ export default function App() {
           {!showResult ? (
             <>
               <div className="header">
-                <div className="header-label">Parallax</div>
-                <div className="header-definition">par·al·lax · /ˈperəˌlaks/ · <em>noun</em> · the effect whereby the position or direction of an object appears to differ when viewed from different positions.</div>
+                <div className="header-label"><span style={{ color: 'var(--ink)' }}>AD</span><span style={{ color: '#990000', fontStyle: 'italic' }}>strology</span></div>
                 <h1 className="header-title">
                   Double <em>Zodiac.</em>
                 </h1>
@@ -882,7 +851,7 @@ export default function App() {
                 <div className="result-footer">
                   Your signs don't agree. <button className="now-what-link" onClick={() => setShowHowItWorks(true)}>Now what?</button>
                   <br />
-                  <span style={{ opacity: 0.6 }}>Parallax — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director</span>
+                  <span style={{ opacity: 0.6 }}>ADstrology — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director</span>
                 </div>
               </div>
 
