@@ -785,7 +785,7 @@ export default function App() {
               <div className="header">
                 <div className="header-label"><span style={{ color: 'var(--ink)' }}>AD</span><span style={{ color: '#990000', fontStyle: 'italic' }}>strology</span></div>
                 <h1 className="header-title">
-                  Double <em>Zodiac.</em>
+                  AD <em>Strology.</em>
                 </h1>
                 <p className="header-sub">
                   You have two zodiac signs. They don't agree on who you are.
