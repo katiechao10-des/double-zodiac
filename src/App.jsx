@@ -550,6 +550,37 @@ style.textContent = `
 
   .result-footer a { color: var(--red); text-decoration: none; }
 
+  .share-btn {
+    display: inline-block;
+    margin-top: 20px;
+    margin-bottom: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--warm-white);
+    background: var(--red);
+    border: none;
+    padding: 14px 40px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .share-btn:hover {
+    background: var(--deep-red);
+    transform: translateY(-1px);
+  }
+
+  .share-msg {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--gold);
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+    animation: fadeIn 0.3s ease forwards;
+  }
+
   .try-again-btn {
     display: inline-block;
     margin-top: 24px;
@@ -670,14 +701,23 @@ export default function App() {
   const [phase, setPhase] = useState(PHASE.ENVELOPE);
   const [currentFrame, setCurrentFrame] = useState(0);
   const [showHowItWorks, setShowHowItWorks] = useState(false);
+  const [shareMsg, setShareMsg] = useState("");
   const animating = useRef(false);
 
-  // Preload all frames on mount
+  // Preload all frames on mount + check for shared URL params
   useEffect(() => {
     FRAME_PATHS.forEach((src) => {
       const img = new Image();
       img.src = src;
     });
+
+    // Check if someone arrived via a shared link like ?combo=Virgo-Horse
+    const params = new URLSearchParams(window.location.search);
+    const combo = params.get("combo");
+    if (combo) {
+      // Clean the URL without reloading
+      window.history.replaceState({}, "", window.location.pathname);
+    }
   }, []);
 
   function handleReveal() {
@@ -690,6 +730,34 @@ export default function App() {
     setResult({ western, chinese, clashLine, key });
     // Animate from back of envelope through opening to paper uncrumple
     animateFrames(7, 12, () => setPhase(PHASE.REVEALED));
+  }
+
+  async function handleShare(r) {
+    const shareUrl = `${window.location.origin}/api/share?combo=${r.key}`;
+    const shareTitle = `I'm a ${r.western.name} ${r.chinese.name}`;
+    const shareText = `${r.western.symbol} × ${r.chinese.emoji} — "${r.clashLine}" \n\nFind your Double Zodiac:`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl,
+        });
+      } catch (e) {
+        // User cancelled share — do nothing
+      }
+    } else {
+      // Desktop fallback: copy link
+      try {
+        await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+        setShareMsg("Copied to clipboard!");
+        setTimeout(() => setShareMsg(""), 2500);
+      } catch (e) {
+        setShareMsg("Copy this link: " + shareUrl);
+        setTimeout(() => setShareMsg(""), 5000);
+      }
+    }
   }
 
   function animateFrames(startFrame, endFrame, onDone) {
@@ -876,6 +944,11 @@ export default function App() {
                 <img src={FRAME_PATHS[12]} alt="Uncrumpled paper" className="paper-image" />
                 <div className="paper-text-overlay">"{result.clashLine}"</div>
               </div>
+
+              <button className="share-btn" onClick={() => handleShare(result)}>
+                Share your result
+              </button>
+              {shareMsg && <div className="share-msg">{shareMsg}</div>}
 
               <div className="result-footer">
                 Your signs don't agree. <button className="now-what-link" onClick={() => setShowHowItWorks(true)}>Now what?</button>
