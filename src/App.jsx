@@ -278,7 +278,7 @@ style.textContent = `
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px 20px;
+    padding: 48px 20px;
     position: relative;
   }
 
