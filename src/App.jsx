@@ -650,6 +650,7 @@ style.textContent = `
   .hiw-footer a { color: var(--red); text-decoration: none; }
 
   @media (max-width: 560px) {
+    .page { padding: 24px 12px; }
     .header-title { font-size: 38px; }
     .result-combo-name { font-size: 26px; }
     .result-breakdown { gap: 32px; }
@@ -781,7 +782,7 @@ export default function App() {
             <div className="hiw-divider" />
             <div className="hiw-section">
               <h2 className="hiw-heading">What's the red envelope?</h2>
-              <p className="hiw-body">Every Lunar New Year growing up (and still to this day), my Nǎinai (grandma) gives me one of these hóngbāo (red envelopes) to wish me good fortune for the year to come. Usually they have money. It symbolizes transferring good fortune, health, and energy from elders to younger generations. Chinese people love money! In my hóngbāo to you this Lunar New Year, I give you the gift of self-reflection. You're welcome!</p>
+              <p className="hiw-body">Every Lunar New Year growing up (and still to this day), my Nǎinai (grandma) gives me one of these Hóngbāo (red envelopes) to wish me good fortune for the year to come. Usually they have money (it symbolizes transferring good fortune, health, and energy from elders to younger generations. Chinese people love money). In my hóngbāo to you this Lunar New Year, I give you the gift of self-reflection. You're welcome!</p>
             </div>
             <div className="hiw-divider" />
             <div className="hiw-section" style={{ textAlign: "center" }}>
