@@ -761,7 +761,7 @@ export default function App() {
               </button>
               <br />
               <p className="hiw-footer">
-                ADstrology — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director
+                Adstrology — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director
               </p>
             </div>
           </div>
@@ -850,7 +850,7 @@ export default function App() {
                 <div className="result-footer">
                   Your signs don't agree. <button className="now-what-link" onClick={() => setShowHowItWorks(true)}>Now what?</button>
                   <br />
-                  <span style={{ opacity: 0.6 }}>ADstrology — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director</span>
+                  <span style={{ opacity: 0.6 }}>Adstrology — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director</span>
                 </div>
               </div>
 
