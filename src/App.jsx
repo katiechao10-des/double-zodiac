@@ -779,6 +779,11 @@ export default function App() {
               <p className="hiw-body">Maybe your Western sign is the version of you that shows up in the client meeting, and your Chinese sign is the one that comes out at 2 AM when you're actually making the work. Maybe one is the creative you're trying to become and the other is the one you can't help being. Maybe they take turns depending on the brief.</p>
             </div>
             <div className="hiw-divider" />
+            <div className="hiw-section">
+              <h2 className="hiw-heading">What's the red envelope?</h2>
+              <p className="hiw-body">Every Lunar New Year growing up (and still to this day), my Nǎinai (grandma) gives me one of these hóngbāo (red envelopes) to wish me good fortune for the year to come. Usually they have money. It symbolizes transferring good fortune, health, and energy from elders to younger generations. Chinese people love money! In my hóngbāo to you this Lunar New Year, I give you the gift of self-reflection. You're welcome!</p>
+            </div>
+            <div className="hiw-divider" />
             <div className="hiw-section" style={{ textAlign: "center" }}>
               <button className="reveal-btn" onClick={handleBackFromHIW}>Find your Double Zodiac</button>
               <br />
