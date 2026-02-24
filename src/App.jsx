@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Analytics } from "@vercel/analytics/react";
 
 // ─── DATA ───────────────────────────────────────────────────────────────────
@@ -33,7 +33,6 @@ const CHINESE_ANIMALS = [
   { name: "Pig", emoji: "🐖" },
 ];
 
-// Lunar New Year dates (approx) for accurate Chinese zodiac calculation
 const LNY_DATES = {
   1940:[1,27],1941:[1,27],1942:[2,15],1943:[2,5],1944:[1,25],1945:[2,13],1946:[2,2],1947:[1,22],
   1948:[2,10],1949:[1,29],1950:[2,17],1951:[2,6],1952:[1,27],1953:[2,14],1954:[2,3],1955:[1,24],
@@ -50,18 +49,15 @@ const LNY_DATES = {
 };
 
 function getWesternSign(month, day) {
-  // Each entry: [startMonth, startDay, signIndex]
   const ranges = [
     [1,20,1],[2,19,2],[3,21,3],[4,20,4],[5,21,5],[6,21,6],
     [7,23,7],[8,23,8],[9,23,9],[10,23,10],[11,22,11],[12,22,0]
   ];
   for (let i = 11; i >= 0; i--) {
     const [m, d, si] = ranges[i];
-    if (month > m || (month === m && day >= d)) {
-      return WESTERN_SIGNS[si];
-    }
+    if (month > m || (month === m && day >= d)) return WESTERN_SIGNS[si];
   }
-  return WESTERN_SIGNS[0]; // Capricorn (born Jan 1-19)
+  return WESTERN_SIGNS[0];
 }
 
 function getChineseAnimal(year, month, day) {
@@ -69,14 +65,11 @@ function getChineseAnimal(year, month, day) {
   const lny = LNY_DATES[year];
   if (lny) {
     const [lnyMonth, lnyDay] = lny;
-    if (month < lnyMonth || (month === lnyMonth && day < lnyDay)) {
-      zodiacYear = year - 1;
-    }
+    if (month < lnyMonth || (month === lnyMonth && day < lnyDay)) zodiacYear = year - 1;
   }
   const index = ((zodiacYear - 1900) % 12 + 12) % 12;
   return CHINESE_ANIMALS[index];
 }
-
 // All 144 clash lines — Agency Edition
 const CLASH_LINES = {
   "Aries-Rat": "One pitches ideas before the brief is even finished. The other already reverse-engineered the client's budget from their LinkedIn activity.",
@@ -225,11 +218,37 @@ const CLASH_LINES = {
   "Pisces-Pig": "Pure creative vibes. You're kind, dreamy, generous, and probably not reading this brief because you got distracted by a typeface three pages ago.",
 };
 
+
+// Frame paths: 13 frames for stop-motion animation
+const FRAME_PATHS = [
+  "/frames/01.png",   // 0  - front of envelope
+  "/frames/02.png",   // 1  - front tilted
+  "/frames/02a.png",  // 2  - front more tilted
+  "/frames/03.png",   // 3  - on edge
+  "/frames/03a.png",  // 4  - on edge (duplicate angle)
+  "/frames/04.png",   // 5  - edge/back transition
+  "/frames/05.png",   // 6  - back tilted
+  "/frames/06.png",   // 7  - back flat, flap closed
+  "/frames/07.png",   // 8  - back flat, flap open
+  "/frames/08.png",   // 9  - back, flap open wider
+  "/frames/09.png",   // 10 - crumpled ball on envelope
+  "/frames/10.png",   // 11 - paper emerging
+  "/frames/11.png",   // 12 - paper mostly uncrumpled
+];
+
+const PHASE = {
+  ENVELOPE: 0,    // Landing: envelope front (frame 1), tap to flip
+  FLIPPING: 1,    // Animating flip (frames 1→5)
+  BIRTHDAY: 2,    // Back of envelope showing, birthday input overlaid
+  OPENING: 3,     // Animating open + uncrumple (frames 5→11)
+  REVEALED: 4,    // Paper flat, clash line visible
+};
+
 // ─── STYLES ─────────────────────────────────────────────────────────────────
 
 const style = document.createElement("style");
 style.textContent = `
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=Caveat:wght@400;500;600&display=swap');
 
   :root {
     --red: #B8372E;
@@ -259,7 +278,7 @@ style.textContent = `
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
+    padding: 20px 20px;
     position: relative;
   }
 
@@ -276,11 +295,7 @@ style.textContent = `
 
   .content { position: relative; z-index: 1; width: 100%; max-width: 520px; }
 
-  /* ── Header ── */
-  .header {
-    text-align: center;
-    margin-bottom: 48px;
-  }
+  .header { text-align: center; margin-bottom: 48px; }
 
   .header-label {
     font-family: 'DM Sans', sans-serif;
@@ -301,10 +316,7 @@ style.textContent = `
     margin-bottom: 20px;
   }
 
-  .header-title em {
-    color: var(--red);
-    font-style: italic;
-  }
+  .header-title em { color: #990000; font-style: italic; }
 
   .header-sub {
     font-family: 'DM Sans', sans-serif;
@@ -314,18 +326,12 @@ style.textContent = `
     line-height: 1.6;
     max-width: 380px;
     margin: 0 auto;
+    font-style: italic;
+    text-align: center;
   }
 
-  /* ── Divider ── */
-  .divider {
-    width: 60px;
-    height: 1px;
-    background: var(--gold);
-    margin: 32px auto;
-    opacity: 0.5;
-  }
+  .divider { width: 60px; height: 1px; background: var(--gold); margin: 32px auto; opacity: 0.5; }
 
-  /* ── Date Input ── */
   .input-section { text-align: center; }
 
   .input-label {
@@ -355,11 +361,7 @@ style.textContent = `
   }
 
   .date-input:focus { border-bottom-color: var(--red); }
-
-  .date-input::-webkit-calendar-picker-indicator {
-    opacity: 0.4;
-    cursor: pointer;
-  }
+  .date-input::-webkit-calendar-picker-indicator { opacity: 0.4; cursor: pointer; }
 
   .reveal-btn {
     display: inline-block;
@@ -377,42 +379,72 @@ style.textContent = `
     transition: all 0.3s ease;
   }
 
-  .reveal-btn:hover {
-    background: var(--deep-red);
-    transform: translateY(-1px);
+  .reveal-btn:hover { background: var(--deep-red); transform: translateY(-1px); }
+  .reveal-btn:disabled { opacity: 0.3; cursor: default; transform: none; }
+
+  /* ── Envelope ── */
+  .envelope-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: fadeIn 0.5s ease forwards;
   }
 
-  .reveal-btn:disabled {
-    opacity: 0.3;
-    cursor: default;
-    transform: none;
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
   }
 
-  /* ── Result Card ── */
-  .result-card {
-    background: var(--cream);
-    border: 1px solid var(--pale-gold);
-    padding: 48px 36px;
-    text-align: center;
-    position: relative;
-    animation: cardReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  .envelope-frame {
+    height: 80vh;
+    width: auto;
+    max-width: 90vw;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .envelope-frame:hover {
+    transform: scale(1.02);
+  }
+
+  .envelope-hint {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  .envelope-frame.no-click { cursor: default; pointer-events: none; }
+
+  /* ── Result ── */
+  .result-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: resultFadeIn 1s ease forwards;
     opacity: 0;
   }
 
-  @keyframes cardReveal {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+  @keyframes resultFadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
   }
 
-  .result-card::before,
-  .result-card::after {
-    content: '';
-    position: absolute;
-    top: 8px; left: 8px; right: 8px; bottom: 8px;
-    border: 1px solid var(--pale-gold);
-    pointer-events: none;
-    opacity: 0.6;
-  }
+  .result-info { text-align: center; margin-bottom: 24px; }
 
   .result-signs {
     display: flex;
@@ -422,10 +454,7 @@ style.textContent = `
     margin-bottom: 8px;
   }
 
-  .result-sign-symbol {
-    font-size: 36px;
-    line-height: 1;
-  }
+  .result-sign-symbol { font-size: 36px; line-height: 1; }
 
   .result-vs {
     font-family: 'Cormorant Garamond', serif;
@@ -449,24 +478,17 @@ style.textContent = `
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--ink-faint);
-    margin-bottom: 28px;
+    margin-bottom: 12px;
   }
 
-  .result-line-container {
-    border-top: 1px solid var(--pale-gold);
-    border-bottom: 1px solid var(--pale-gold);
-    padding: 24px 8px;
-    margin-bottom: 28px;
+  .result-breakdown {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-bottom: 20px;
   }
 
-  .result-clash-line {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 19px;
-    font-weight: 400;
-    font-style: italic;
-    color: var(--ink-light);
-    line-height: 1.65;
-  }
+  .result-breakdown-item { text-align: center; }
 
   .result-west-label, .result-east-label {
     font-family: 'DM Sans', sans-serif;
@@ -486,28 +508,48 @@ style.textContent = `
     color: var(--ink);
   }
 
-  .result-breakdown {
-    display: flex;
-    justify-content: center;
-    gap: 48px;
-    margin-bottom: 28px;
+  .paper-container {
+    position: relative;
+    height: 80vh;
+    width: auto;
+    max-width: 90vw;
   }
 
-  .result-breakdown-item { text-align: center; }
+  .paper-image { height: 100%; width: auto; max-width: 90vw; object-fit: contain; border-radius: 2px; display: block; }
+
+  .paper-text-overlay {
+    position: absolute;
+    top: 61%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 78%;
+    text-align: center;
+    font-family: 'Caveat', cursive;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.5;
+    animation: textAppear 1.5s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes textAppear {
+    0% { opacity: 0; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+  }
 
   .result-footer {
     font-family: 'DM Sans', sans-serif;
     font-size: 11px;
     color: var(--ink-faint);
     letter-spacing: 0.5px;
+    text-align: center;
+    margin-top: 24px;
   }
 
-  .result-footer a {
-    color: var(--red);
-    text-decoration: none;
-  }
+  .result-footer a { color: var(--red); text-decoration: none; }
 
-  /* ── Try Again ── */
   .try-again-btn {
     display: inline-block;
     margin-top: 24px;
@@ -526,7 +568,6 @@ style.textContent = `
 
   .try-again-btn:hover { color: var(--red); }
 
-  /* ── Gold corner ornaments ── */
   .ornament {
     position: fixed;
     width: 60px;
@@ -541,16 +582,6 @@ style.textContent = `
   .ornament-bl { bottom: 20px; left: 20px; border-bottom: 1.5px solid var(--gold); border-left: 1.5px solid var(--gold); }
   .ornament-br { bottom: 20px; right: 20px; border-bottom: 1.5px solid var(--gold); border-right: 1.5px solid var(--gold); }
 
-  @media (max-width: 560px) {
-    .header-title { font-size: 38px; }
-    .result-card { padding: 36px 24px; }
-    .result-combo-name { font-size: 26px; }
-    .result-clash-line { font-size: 17px; }
-    .result-breakdown { gap: 32px; }
-    .hiw-heading { font-size: 22px; }
-  }
-
-  /* ── How it works link ── */
   .how-link {
     display: inline-block;
     margin-top: 16px;
@@ -569,7 +600,6 @@ style.textContent = `
 
   .how-link:hover { color: var(--red); }
 
-  /* ── Now what link in results ── */
   .now-what-link {
     font-family: 'DM Sans', sans-serif;
     font-size: 11px;
@@ -585,9 +615,7 @@ style.textContent = `
 
   .now-what-link:hover { border-bottom-color: var(--red); }
 
-  /* ── How It Works page ── */
   .hiw-content { max-width: 560px; }
-
   .hiw-section { margin-bottom: 8px; }
 
   .hiw-heading {
@@ -608,18 +636,8 @@ style.textContent = `
     margin-bottom: 14px;
   }
 
-  .hiw-aside {
-    font-style: italic;
-    color: var(--ink-faint);
-  }
-
-  .hiw-divider {
-    width: 40px;
-    height: 1px;
-    background: var(--gold);
-    margin: 32px 0;
-    opacity: 0.4;
-  }
+  .hiw-aside { font-style: italic; color: var(--ink-faint); }
+  .hiw-divider { width: 40px; height: 1px; background: var(--gold); margin: 32px 0; opacity: 0.4; }
 
   .hiw-footer {
     font-family: 'DM Sans', sans-serif;
@@ -629,9 +647,16 @@ style.textContent = `
     letter-spacing: 0.5px;
   }
 
-  .hiw-footer a {
-    color: var(--red);
-    text-decoration: none;
+  .hiw-footer a { color: var(--red); text-decoration: none; }
+
+  @media (max-width: 560px) {
+    .header-title { font-size: 38px; }
+    .result-combo-name { font-size: 26px; }
+    .result-breakdown { gap: 32px; }
+    .hiw-heading { font-size: 22px; }
+    .envelope-frame { height: 70vh; }
+    .paper-container { height: 70vh; }
+    .paper-text-overlay { font-size: 15px; }
   }
 `;
 document.head.appendChild(style);
@@ -641,8 +666,18 @@ document.head.appendChild(style);
 export default function App() {
   const [birthday, setBirthday] = useState("");
   const [result, setResult] = useState(null);
-  const [showResult, setShowResult] = useState(false);
+  const [phase, setPhase] = useState(PHASE.ENVELOPE);
+  const [currentFrame, setCurrentFrame] = useState(0);
   const [showHowItWorks, setShowHowItWorks] = useState(false);
+  const animating = useRef(false);
+
+  // Preload all frames on mount
+  useEffect(() => {
+    FRAME_PATHS.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
   function handleReveal() {
     if (!birthday) return;
@@ -652,18 +687,46 @@ export default function App() {
     const key = `${western.name}-${chinese.name}`;
     const clashLine = CLASH_LINES[key] || "A combination so rare, even the stars are confused.";
     setResult({ western, chinese, clashLine, key });
-    setShowResult(true);
+    // Animate from back of envelope through opening to paper uncrumple
+    animateFrames(7, 12, () => setPhase(PHASE.REVEALED));
+  }
+
+  function animateFrames(startFrame, endFrame, onDone) {
+    if (animating.current) return;
+    animating.current = true;
+    let frame = startFrame;
+    const step = startFrame < endFrame ? 1 : -1;
+    const interval = setInterval(() => {
+      frame += step;
+      setCurrentFrame(frame);
+      if (frame === endFrame) {
+        clearInterval(interval);
+        animating.current = false;
+        if (onDone) onDone();
+      }
+    }, 180);
+  }
+
+  function handleEnvelopeClick() {
+    if (animating.current) return;
+    if (phase === PHASE.ENVELOPE) {
+      // Flip envelope from front to back: frames 0→7
+      animateFrames(0, 7, () => setPhase(PHASE.BIRTHDAY));
+    }
   }
 
   function handleReset() {
-    setShowResult(false);
+    setPhase(PHASE.ENVELOPE);
     setResult(null);
     setBirthday("");
+    setCurrentFrame(0);
   }
 
   function handleBackFromHIW() {
     setShowHowItWorks(false);
   }
+
+  // ─── HOW IT WORKS PAGE ─────────────────────────────────────────────────
 
   if (showHowItWorks) {
     return (
@@ -672,104 +735,63 @@ export default function App() {
         <div className="ornament ornament-tr" />
         <div className="ornament ornament-bl" />
         <div className="ornament ornament-br" />
-
         <div className="page">
           <div className="content hiw-content">
             <button className="try-again-btn" onClick={handleBackFromHIW} style={{ marginBottom: 24 }}>
               ← Back
             </button>
-
             <div className="header" style={{ marginBottom: 36 }}>
               <div className="header-label">Adstrology</div>
               <h1 className="header-title" style={{ fontSize: 40 }}>
                 How it <em>works.</em>
               </h1>
             </div>
-
             <div className="hiw-section">
               <h2 className="hiw-heading">You have two zodiacs. They've never met.</h2>
-              <p className="hiw-body">
-                Western astrology and the Chinese zodiac are two of the oldest personality systems on earth. They were developed thousands of miles apart, using completely different logic, looking at completely different skies. And they've been quietly disagreeing about who you are since the day you were born.
-              </p>
-              <p className="hiw-body">
-                I built this because I kept noticing the same thing in life: everybody's got a Co-Star notification on their phone, but nobody talks about the other zodiac–the one that runs on years, not months. Half the people I know plan their week around Mercury retrograde but couldn't tell you their Chinese animal. That felt like a gap, and I intend to fill it.
-              </p>
+              <p className="hiw-body">Western astrology and the Chinese zodiac are two of the oldest personality systems on earth. They were developed thousands of miles apart, using completely different logic, looking at completely different skies. And they've been quietly disagreeing about who you are since the day you were born.</p>
+              <p className="hiw-body">I built this because I kept noticing the same thing in life: everybody's got a Co-Star notification on their phone, but nobody talks about the other zodiac–the one that runs on years, not months. Half the people I know plan their week around Mercury retrograde but couldn't tell you their Chinese animal. That felt like a gap, and I intend to fill it.</p>
             </div>
-
             <div className="hiw-divider" />
-
             <div className="hiw-section">
               <h2 className="hiw-heading">The West reads your month.</h2>
-              <p className="hiw-body">
-                Western astrology, the one you probably know, is based on the position of the sun at the moment of your birth. The year is divided into twelve signs, each lasting roughly a month: Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, Pisces.
-              </p>
-              <p className="hiw-body">
-                Your sign is tied to a constellation, an element (fire, earth, air, or water), and a set of personality traits that are supposed to explain how you think, create, and move through the world. In advertising, it's the sign that explains why you either thrive in brainstorms or need to be left alone with a blank doc.
-              </p>
+              <p className="hiw-body">Western astrology, the one you probably know, is based on the position of the sun at the moment of your birth. The year is divided into twelve signs, each lasting roughly a month: Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, Pisces.</p>
+              <p className="hiw-body">Your sign is tied to a constellation, an element (fire, earth, air, or water), and a set of personality traits that are supposed to explain how you think, create, and move through the world. In advertising, it's the sign that explains why you either thrive in brainstorms or need to be left alone with a blank doc.</p>
             </div>
-
             <div className="hiw-divider" />
-
             <div className="hiw-section">
               <h2 className="hiw-heading">The East reads your year.</h2>
-              <p className="hiw-body">
-                The Chinese zodiac works on a completely different clock. Instead of months, it runs on a twelve-year cycle, with each year assigned to an animal: Rat, Ox, Tiger, Rabbit, Dragon, Snake, Horse, Goat, Monkey, Rooster, Dog, Pig.
-              </p>
-              <p className="hiw-body">
-                Your animal isn't based on the stars, it's based on the lunar calendar, tied to a myth about a great race where twelve animals competed for their place in the cycle. The Rat won by riding the Ox and jumping off at the finish line. The Pig came last because it stopped for a snack. Honestly, the Pig sounds like most creatives on a Friday.
-              </p>
-              <p className="hiw-body">
-                Each animal carries its own personality, its own strengths, its own warnings. And unlike Western astrology, which resets every month, your Chinese sign is shared by everyone born in your year; an entire generation of creatives marked by the same animal energy.
-              </p>
+              <p className="hiw-body">The Chinese zodiac works on a completely different clock. Instead of months, it runs on a twelve-year cycle, with each year assigned to an animal: Rat, Ox, Tiger, Rabbit, Dragon, Snake, Horse, Goat, Monkey, Rooster, Dog, Pig.</p>
+              <p className="hiw-body">Your animal isn't based on the stars, it's based on the lunar calendar, tied to a myth about a great race where twelve animals competed for their place in the cycle. The Rat won by riding the Ox and jumping off at the finish line. The Pig came last because it stopped for a snack. Honestly, the Pig sounds like most creatives on a Friday.</p>
+              <p className="hiw-body">Each animal carries its own personality, its own strengths, its own warnings. And unlike Western astrology, which resets every month, your Chinese sign is shared by everyone born in your year; an entire generation of creatives marked by the same animal energy.</p>
             </div>
-
             <div className="hiw-divider" />
-
             <div className="hiw-section">
               <h2 className="hiw-heading">So what's the problem?</h2>
-              <p className="hiw-body">
-                The problem is that these two systems almost never agree.
-              </p>
-              <p className="hiw-body">
-                Western astrology might call you cautious and analytical, the kind of creative who proofs the deck three times before the tissue session. The Chinese zodiac might call you reckless and free, the kind who scraps the whole campaign at midnight because the idea wasn't brave enough. One says you crave structure. The other says you can't sit through a status meeting. Same person, same birthday, two completely opposite readings.
-              </p>
-              <p className="hiw-body">
-                That's your Double Zodiac. The collision between what the West says you are and what the East says you are. There are 144 possible combinations (12 Western signs × 12 Chinese animals), and every creative on earth falls into exactly one of them.
-              </p>
+              <p className="hiw-body">The problem is that these two systems almost never agree.</p>
+              <p className="hiw-body">Western astrology might call you cautious and analytical, the kind of creative who proofs the deck three times before the tissue session. The Chinese zodiac might call you reckless and free, the kind who scraps the whole campaign at midnight because the idea wasn't brave enough. One says you crave structure. The other says you can't sit through a status meeting. Same person, same birthday, two completely opposite readings.</p>
+              <p className="hiw-body">That's your Double Zodiac. The collision between what the West says you are and what the East says you are. There are 144 possible combinations (12 Western signs × 12 Chinese animals), and every creative on earth falls into exactly one of them.</p>
             </div>
-
             <div className="hiw-divider" />
-
             <div className="hiw-section">
               <h2 className="hiw-heading">What does your Double Zodiac mean?</h2>
-              <p className="hiw-body">
-                It means you're more complicated than one system (or one job title) can explain.
-              </p>
-              <p className="hiw-body">
-                Your Double Zodiac isn't a diagnosis. It's a contradiction. If, like me, you (want to) work in advertising, you already know that contradictions are where the interesting stuff lives. The tension between your two signs is where your creative voice gets its texture, its friction, its edge.
-              </p>
-              <p className="hiw-body">
-                Maybe your Western sign is the version of you that shows up in the client meeting, and your Chinese sign is the one that comes out at 2 AM when you're actually making the work. Maybe one is the creative you're trying to become and the other is the one you can't help being. Maybe they take turns depending on the brief.
-              </p>
+              <p className="hiw-body">It means you're more complicated than one system (or one job title) can explain.</p>
+              <p className="hiw-body">Your Double Zodiac isn't a diagnosis. It's a contradiction. If, like me, you (want to) work in advertising, you already know that contradictions are where the interesting stuff lives. The tension between your two signs is where your creative voice gets its texture, its friction, its edge.</p>
+              <p className="hiw-body">Maybe your Western sign is the version of you that shows up in the client meeting, and your Chinese sign is the one that comes out at 2 AM when you're actually making the work. Maybe one is the creative you're trying to become and the other is the one you can't help being. Maybe they take turns depending on the brief.</p>
             </div>
-
             <div className="hiw-divider" />
-
             <div className="hiw-section" style={{ textAlign: "center" }}>
-              <button className="reveal-btn" onClick={handleBackFromHIW}>
-                Find your Double Zodiac
-              </button>
+              <button className="reveal-btn" onClick={handleBackFromHIW}>Find your Double Zodiac</button>
               <br />
-              <p className="hiw-footer">
-                Adstrology — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director
-              </p>
+              <p className="hiw-footer">Adstrology — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director</p>
             </div>
           </div>
         </div>
-      <Analytics />
-    </>
+        <Analytics />
+      </>
     );
   }
+
+  // ─── MAIN FLOW ──────────────────────────────────────────────────────────
 
   return (
     <>
@@ -780,62 +802,58 @@ export default function App() {
 
       <div className="page">
         <div className="content">
-          {!showResult ? (
-            <>
-              <div className="header">
-                <h1 className="header-title">
-                  Ad<em>strology.</em>
-                </h1>
-                <p className="header-sub">
-                  You have two zodiac signs. They don't agree on who you are.
-                </p>
-              </div>
 
-              <div className="divider" />
+          {/* PHASE: ENVELOPE FRONT — Landing page */}
+          {(phase === PHASE.ENVELOPE || phase === PHASE.FLIPPING) && (
+            <div className="envelope-stage">
+              <h1 className="header-title" style={{ marginBottom: 8 }}>Ad<em>strology.</em></h1>
+              <p className="header-sub" style={{ marginBottom: 28 }}>You have two zodiac signs. They don't agree on who you are.</p>
+              <img
+                src={FRAME_PATHS[currentFrame]}
+                alt="Red envelope"
+                className={`envelope-frame${phase === PHASE.FLIPPING ? " no-click" : ""}`}
+                onClick={handleEnvelopeClick}
+                draggable={false}
+              />
+              {phase === PHASE.ENVELOPE && <div className="envelope-hint">Tap the envelope</div>}
+              {phase === PHASE.FLIPPING && <div className="envelope-hint" style={{ animation: "none", opacity: 0.4 }}>...</div>}
+              <button className="how-link" onClick={() => setShowHowItWorks(true)}>How it works</button>
+            </div>
+          )}
 
-              <div className="input-section">
-                <div className="input-label">Enter your birthday</div>
-                <input
-                  type="date"
-                  className="date-input"
-                  value={birthday}
-                  onChange={(e) => setBirthday(e.target.value)}
-                  min="1940-01-01"
-                  max="2030-12-31"
-                />
-                <br />
-                <button
-                  className="reveal-btn"
-                  onClick={handleReveal}
-                  disabled={!birthday}
-                >
-                  Reveal your crisis
-                </button>
-                <br />
-                <button className="how-link" onClick={() => setShowHowItWorks(true)}>
-                  How it works
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="result-card" key={result.key}>
+          {/* PHASE: BIRTHDAY — Back of envelope with input overlaid */}
+          {(phase === PHASE.BIRTHDAY || phase === PHASE.OPENING) && (
+            <div className="envelope-stage">
+              <h1 className="header-title" style={{ marginBottom: 8 }}>Ad<em>strology.</em></h1>
+              {phase === PHASE.BIRTHDAY && (
+                <div className="input-section" style={{ marginBottom: 20 }}>
+                  <div className="input-label">Enter your birthday</div>
+                  <input type="date" className="date-input" value={birthday} onChange={(e) => setBirthday(e.target.value)} min="1940-01-01" max="2030-12-31" />
+                  <br />
+                  <button className="reveal-btn" onClick={handleReveal} disabled={!birthday}>Open your envelope</button>
+                </div>
+              )}
+              <img
+                src={FRAME_PATHS[currentFrame]}
+                alt="Red envelope"
+                className="envelope-frame no-click"
+                draggable={false}
+              />
+              {phase === PHASE.OPENING && <div className="envelope-hint" style={{ animation: "none", opacity: 0.4 }}>...</div>}
+            </div>
+          )}
+
+          {/* PHASE: REVEALED — paper flat with result */}
+          {phase === PHASE.REVEALED && result && (
+            <div className="result-stage">
+              <div className="result-info">
                 <div className="result-signs">
                   <span className="result-sign-symbol">{result.western.symbol}</span>
                   <span className="result-vs">×</span>
                   <span className="result-sign-symbol">{result.chinese.emoji}</span>
                 </div>
-
-                <div className="result-combo-name">
-                  {result.western.name} {result.chinese.name}
-                </div>
-
+                <div className="result-combo-name">{result.western.name} {result.chinese.name}</div>
                 <div className="result-subtitle">Your Double Zodiac</div>
-
-                <div className="result-line-container">
-                  <p className="result-clash-line">"{result.clashLine}"</p>
-                </div>
-
                 <div className="result-breakdown">
                   <div className="result-breakdown-item">
                     <div className="result-west-label">West says</div>
@@ -846,21 +864,25 @@ export default function App() {
                     <div className="result-sign-name">{result.chinese.name}</div>
                   </div>
                 </div>
+              </div>
 
-                <div className="result-footer">
-                  Your signs don't agree. <button className="now-what-link" onClick={() => setShowHowItWorks(true)}>Now what?</button>
-                  <br />
-                  <span style={{ opacity: 0.6 }}>Adstrology — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director</span>
-                </div>
+              <div className="paper-container">
+                <img src={FRAME_PATHS[12]} alt="Uncrumpled paper" className="paper-image" />
+                <div className="paper-text-overlay">"{result.clashLine}"</div>
+              </div>
+
+              <div className="result-footer">
+                Your signs don't agree. <button className="now-what-link" onClick={() => setShowHowItWorks(true)}>Now what?</button>
+                <br />
+                <span style={{ opacity: 0.6 }}>Adstrology — <a href="https://katiechao.xyz" target="_blank" rel="noopener noreferrer">Katie Chao</a>, Art Director</span>
               </div>
 
               <div style={{ textAlign: "center" }}>
-                <button className="try-again-btn" onClick={handleReset}>
-                  ← Try another birthday
-                </button>
+                <button className="try-again-btn" onClick={handleReset}>← Try another birthday</button>
               </div>
-            </>
+            </div>
           )}
+
         </div>
       </div>
       <Analytics />
