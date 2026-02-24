@@ -784,7 +784,7 @@ export default function App() {
             <>
               <div className="header">
                 <h1 className="header-title">
-                  AD<em>strology.</em>
+                  Ad<em>strology.</em>
                 </h1>
                 <p className="header-sub">
                   You have two zodiac signs. They don't agree on who you are.
