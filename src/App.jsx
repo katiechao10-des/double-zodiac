@@ -525,9 +525,9 @@ style.textContent = `
     width: 78%;
     text-align: center;
     font-family: 'Caveat', cursive;
-    font-size: 20px;
+    font-size: 40px;
     font-weight: 500;
-    color: var(--ink);
+    color: #1A1410;
     line-height: 1.5;
     animation: textAppear 1.5s ease forwards;
     opacity: 0;
@@ -688,7 +688,7 @@ style.textContent = `
     .hiw-heading { font-size: 22px; }
     .envelope-frame { height: 70vh; }
     .paper-container { height: 70vh; }
-    .paper-text-overlay { font-size: 15px; top: 57%; }
+    .paper-text-overlay { font-size: 30px; top: 57%; }
   }
 `;
 document.head.appendChild(style);
