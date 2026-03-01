@@ -251,16 +251,16 @@ style.textContent = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=Caveat:wght@400;500;600&display=swap');
 
   :root {
-    --red: #B8372E;
-    --deep-red: #8B1A1A;
-    --gold: #C9A84C;
-    --pale-gold: #E8D5A3;
-    --cream: #FDF6EC;
-    --warm-white: #FEFCF8;
-    --ink: #1A1410;
-    --ink-light: #4A3F35;
-    --ink-faint: #8C7E6E;
-    --parchment: #F5EDE0;
+    --red: #E05A52;
+    --deep-red: #C94040;
+    --gold: #D4B65A;
+    --pale-gold: #A8935C;
+    --cream: #2E2A2B;
+    --warm-white: #231F20;
+    --ink: #F2EFEA;
+    --ink-light: #D1CAC0;
+    --ink-faint: #A89F94;
+    --parchment: #2E2A2B;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -287,8 +287,8 @@ style.textContent = `
     position: fixed;
     inset: 0;
     background:
-      radial-gradient(ellipse at 20% 0%, rgba(184, 55, 46, 0.04) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 100%, rgba(201, 168, 76, 0.06) 0%, transparent 60%);
+      radial-gradient(ellipse at 20% 0%, rgba(224, 90, 82, 0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(212, 182, 90, 0.06) 0%, transparent 60%);
     pointer-events: none;
     z-index: 0;
   }
@@ -316,7 +316,7 @@ style.textContent = `
     margin-bottom: 20px;
   }
 
-  .header-title em { color: #990000; font-style: italic; }
+  .header-title em { color: #E05A52; font-style: italic; }
 
   .header-sub {
     font-family: 'DM Sans', sans-serif;
@@ -361,7 +361,7 @@ style.textContent = `
   }
 
   .date-input:focus { border-bottom-color: var(--red); }
-  .date-input::-webkit-calendar-picker-indicator { opacity: 0.4; cursor: pointer; }
+  .date-input::-webkit-calendar-picker-indicator { opacity: 0.6; cursor: pointer; filter: invert(1); }
 
   .reveal-btn {
     display: inline-block;
