@@ -882,7 +882,7 @@ export default function App() {
           {(phase === PHASE.ENVELOPE || phase === PHASE.FLIPPING) && (
             <div className="envelope-stage">
               <img src="/wordmarkGold.png" alt="Adstrology" className="wordmark" style={{ marginBottom: 8, width: "640px", maxWidth: "180vw" }} />
-              <p className="header-sub" style={{ marginBottom: 28 }}>One Western sign. One Chinese sign. One uncomfortably accurate ad career read.</p>
+              <p className="header-sub" style={{ marginBottom: 28 }}>You have two zodiac signs. They don't agree on who you are.</p>
               <img
                 src={FRAME_PATHS[currentFrame]}
                 alt="Red envelope"
