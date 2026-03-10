@@ -689,7 +689,6 @@ style.textContent = `
     .envelope-frame { height: 70vh; }
     .paper-container { height: 70vh; }
     .paper-text-overlay { font-size: 20px; line-height: 1.3; top: 57%; }
-    .wordmark { width: 320px !important; }
   }
 `;
 document.head.appendChild(style);
