@@ -681,7 +681,7 @@ style.textContent = `
   .hiw-footer a { color: var(--red); text-decoration: none; }
 
   @media (max-width: 560px) {
-    .page { padding: 36px 12px 24px; }
+    .page { padding: 24px 12px; }
     .header-title { font-size: 38px; }
     .result-combo-name { font-size: 26px; }
     .result-breakdown { gap: 32px; }
