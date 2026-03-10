@@ -688,7 +688,7 @@ style.textContent = `
     .hiw-heading { font-size: 22px; }
     .envelope-frame { height: 70vh; }
     .paper-container { height: 70vh; }
-    .paper-text-overlay { font-size: 20px; line-height: 1.3; top: 57%; }
+    .paper-text-overlay { font-size: 30px; top: 57%; }
   }
 `;
 document.head.appendChild(style);
