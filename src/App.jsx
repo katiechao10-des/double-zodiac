@@ -880,7 +880,7 @@ export default function App() {
           {/* PHASE: ENVELOPE FRONT — Landing page */}
           {(phase === PHASE.ENVELOPE || phase === PHASE.FLIPPING) && (
             <div className="envelope-stage">
-              <img src="/wordmarkGold.png" alt="Adstrology" className="wordmark" style={{ marginBottom: 8, width: "320px", maxWidth: "90vw" }} />
+              <img src="/wordmarkGold.png" alt="Adstrology" className="wordmark" style={{ marginBottom: 8, width: "640px", maxWidth: "180vw" }} />
               <p className="header-sub" style={{ marginBottom: 28 }}>You have two zodiac signs. They don't agree on who you are.</p>
               <img
                 src={FRAME_PATHS[currentFrame]}
@@ -898,7 +898,7 @@ export default function App() {
           {/* PHASE: BIRTHDAY — Back of envelope with input overlaid */}
           {(phase === PHASE.BIRTHDAY || phase === PHASE.OPENING) && (
             <div className="envelope-stage">
-              <img src="/wordmarkGold.png" alt="Adstrology" className="wordmark" style={{ marginBottom: 8, width: "320px", maxWidth: "90vw" }} />
+              <img src="/wordmarkGold.png" alt="Adstrology" className="wordmark" style={{ marginBottom: 8, width: "640px", maxWidth: "180vw" }} />
               {phase === PHASE.BIRTHDAY && (
                 <div className="input-section" style={{ marginBottom: 20 }}>
                   <div className="input-label">Enter your birthday</div>
