@@ -266,19 +266,50 @@ style.textContent = `
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: var(--warm-white);
     color: var(--ink);
     font-family: 'DM Sans', sans-serif;
+    overflow: auto;
+    margin: 0;
+    background: #1a1410;
+  }
+
+  .desk-wrapper {
+    position: relative;
+    width: 2000px;
+    height: 1140px;
+    margin: 0 auto;
+    background: url('/desktopBackground.png') no-repeat;
+    background-size: 2000px 1140px;
+  }
+
+  .monitor-screen {
+    position: absolute;
+    left: 520px;
+    top: 160px;
+    width: 940px;
+    height: 560px;
+    overflow-y: auto;
     overflow-x: hidden;
+    background: var(--warm-white);
+    border-radius: 2px;
+    z-index: 10;
+  }
+
+  .monitor-screen::-webkit-scrollbar {
+    width: 4px;
+  }
+  .monitor-screen::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 2px;
   }
 
   .page {
-    min-height: 100vh;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 48px 20px;
+    padding: 24px 16px;
     position: relative;
   }
 
@@ -397,7 +428,7 @@ style.textContent = `
   }
 
   .envelope-frame {
-    height: 80vh;
+    height: 300px;
     width: auto;
     max-width: 90vw;
     object-fit: contain;
@@ -465,10 +496,10 @@ style.textContent = `
 
   .result-combo-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 700;
     color: var(--ink);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .result-subtitle {
@@ -484,8 +515,8 @@ style.textContent = `
   .result-breakdown {
     display: flex;
     justify-content: center;
-    gap: 48px;
-    margin-bottom: 20px;
+    gap: 32px;
+    margin-bottom: 12px;
   }
 
   .result-breakdown-item { text-align: center; }
@@ -510,7 +541,7 @@ style.textContent = `
 
   .paper-container {
     position: relative;
-    height: 80vh;
+    height: 250px;
     width: auto;
     max-width: 90vw;
   }
@@ -525,10 +556,10 @@ style.textContent = `
     width: 78%;
     text-align: center;
     font-family: 'Caveat', cursive;
-    font-size: 40px;
+    font-size: 18px;
     font-weight: 500;
     color: #1A1410;
-    line-height: 1.5;
+    line-height: 1.3;
     animation: textAppear 1.5s ease forwards;
     opacity: 0;
   }
@@ -686,8 +717,8 @@ style.textContent = `
     .result-combo-name { font-size: 26px; }
     .result-breakdown { gap: 32px; }
     .hiw-heading { font-size: 22px; }
-    .envelope-frame { height: 70vh; }
-    .paper-container { height: 70vh; }
+    .envelope-frame { height: 250px; }
+    .paper-container { height: 200px; }
     .paper-text-overlay { font-size: 20px; line-height: 1.3; top: 57%; }
     .wordmark { width: 320px !important; }
   }
@@ -870,6 +901,8 @@ export default function App() {
 
   return (
     <>
+      <div className="desk-wrapper">
+      <div className="monitor-screen">
       <div className="ornament ornament-tl" />
       <div className="ornament ornament-tr" />
       <div className="ornament ornament-bl" />
@@ -881,8 +914,8 @@ export default function App() {
           {/* PHASE: ENVELOPE FRONT — Landing page */}
           {(phase === PHASE.ENVELOPE || phase === PHASE.FLIPPING) && (
             <div className="envelope-stage">
-              <img src="/wordmarkGold.png" alt="Adstrology" className="wordmark" style={{ marginBottom: 8, width: "640px", maxWidth: "180vw" }} />
-              <p className="header-sub" style={{ marginBottom: 28 }}>One Western sign. One Chinese sign.<br />One uncomfortably accurate ad career read.</p>
+              <img src="/wordmarkGold.png" alt="Adstrology" className="wordmark" style={{ marginBottom: 8, width: "280px", maxWidth: "80vw" }} />
+              <p className="header-sub" style={{ marginBottom: 28 }}>Horoscopes written for people in advertising.<br />Find yours.</p>
               <img
                 src={FRAME_PATHS[currentFrame]}
                 alt="Red envelope"
@@ -899,7 +932,7 @@ export default function App() {
           {/* PHASE: BIRTHDAY — Back of envelope with input overlaid */}
           {(phase === PHASE.BIRTHDAY || phase === PHASE.OPENING) && (
             <div className="envelope-stage">
-              <img src="/wordmarkGold.png" alt="Adstrology" className="wordmark" style={{ marginBottom: 8, width: "640px", maxWidth: "180vw" }} />
+              <img src="/wordmarkGold.png" alt="Adstrology" className="wordmark" style={{ marginBottom: 8, width: "280px", maxWidth: "80vw" }} />
               {phase === PHASE.BIRTHDAY && (
                 <div className="input-section" style={{ marginBottom: 20 }}>
                   <div className="input-label">Enter your birthday</div>
@@ -964,6 +997,8 @@ export default function App() {
           )}
 
         </div>
+      </div>
+      </div>
       </div>
       <Analytics />
     </>
