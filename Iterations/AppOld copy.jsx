@@ -282,18 +282,6 @@ style.textContent = `
     background-size: 2000px 1140px;
   }
 
-  .desk-frame-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 2000px;
-    height: 1140px;
-    background: url('/desktopFrame.png') no-repeat;
-    background-size: 2000px 1140px;
-    pointer-events: none;
-    z-index: 20;
-  }
-
   .monitor-screen {
     position: absolute;
     left: 520px;
@@ -914,7 +902,6 @@ export default function App() {
   return (
     <>
       <div className="desk-wrapper">
-      <div className="desk-frame-overlay" />
       <div className="monitor-screen">
       <div className="ornament ornament-tl" />
       <div className="ornament ornament-tr" />
