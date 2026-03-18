@@ -792,16 +792,6 @@ export default function App() {
       // Clean the URL without reloading
       window.history.replaceState({}, "", window.location.pathname);
     }
-
-    // Scroll to center of the desk wrapper on desktop
-    requestAnimationFrame(() => {
-      const wrapper = document.querySelector('.desk-wrapper');
-      if (wrapper) {
-        const scrollX = (wrapper.offsetWidth - window.innerWidth) / 2;
-        const scrollY = (wrapper.offsetHeight - window.innerHeight) / 2;
-        window.scrollTo(scrollX, scrollY);
-      }
-    });
   }, []);
 
   function handleReveal() {
