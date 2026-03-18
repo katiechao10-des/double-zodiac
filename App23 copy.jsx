@@ -798,7 +798,7 @@ export default function App() {
       const wrapper = document.querySelector('.desk-wrapper');
       if (wrapper) {
         const scrollX = (wrapper.offsetWidth - window.innerWidth) / 2;
-        const scrollY = (wrapper.offsetHeight - window.innerHeight) / 2 - 80;
+        const scrollY = (wrapper.offsetHeight - window.innerHeight) / 2;
         window.scrollTo(scrollX, scrollY);
       }
     });
