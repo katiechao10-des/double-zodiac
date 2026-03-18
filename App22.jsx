@@ -727,7 +727,7 @@ style.textContent = `
   }
 
   @media (max-width: 560px) {
-    .page { padding: 48px 12px 12px; }
+    .page { padding: 36px 12px 24px; }
     .header-title { font-size: 38px; }
     .result-combo-name { font-size: 26px; }
     .result-breakdown { gap: 32px; }
@@ -735,7 +735,6 @@ style.textContent = `
     .envelope-frame { height: 250px; }
     .clash-line-text { font-size: 22px; }
     .wordmark { width: 320px !important; }
-    .try-again-btn { margin-bottom: 0; }
   }
 
   @media (max-width: 1024px) {
