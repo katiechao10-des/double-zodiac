@@ -487,7 +487,7 @@ style.textContent = `
     100% { opacity: 1; }
   }
 
-  .result-info { text-align: center; margin-bottom: 24px; }
+  .result-info { text-align: center; margin-bottom: 0; }
 
   .result-signs {
     display: flex;
@@ -528,7 +528,7 @@ style.textContent = `
     display: flex;
     justify-content: center;
     gap: 32px;
-    margin-bottom: 12px;
+    margin-bottom: 0;
   }
 
   .result-breakdown-item { text-align: center; }
@@ -551,27 +551,16 @@ style.textContent = `
     color: var(--ink);
   }
 
-  .paper-container {
-    position: relative;
-    height: 250px;
-    width: auto;
-    max-width: 90vw;
-  }
-
-  .paper-image { height: 100%; width: auto; max-width: 90vw; object-fit: contain; border-radius: 2px; display: block; }
-
-  .paper-text-overlay {
-    position: absolute;
-    top: 61%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 78%;
-    text-align: center;
-    font-family: 'Caveat', cursive;
-    font-size: 18px;
+  .clash-line-text {
+    font-family: Georgia, serif;
+    font-size: 28px;
+    font-style: italic;
     font-weight: 500;
-    color: #1A1410;
-    line-height: 1.3;
+    color: #D4B65A;
+    line-height: 1.4;
+    text-align: center;
+    max-width: 480px;
+    margin: 16px auto;
     animation: textAppear 1.5s ease forwards;
     opacity: 0;
   }
@@ -723,6 +712,20 @@ style.textContent = `
 
   .hiw-footer a { color: var(--red); text-decoration: none; }
 
+  @media (min-width: 1025px) {
+    .result-sign-symbol { font-size: 28px; }
+    .result-combo-name { font-size: 20px; margin-bottom: 2px; }
+    .result-subtitle { font-size: 9px; margin-bottom: 6px; }
+    .result-signs { gap: 14px; margin-bottom: 4px; }
+    .result-breakdown { gap: 24px; }
+    .result-west-label, .result-east-label { font-size: 9px; }
+    .result-sign-name { font-size: 13px; }
+    .clash-line-text { font-size: 22px; line-height: 1.3; max-width: 400px; }
+    .share-btn { margin-top: 8px; padding: 10px 28px; font-size: 10px; }
+    .result-footer { font-size: 10px; margin-top: 8px; }
+    .try-again-btn { font-size: 10px; margin-top: 4px; }
+  }
+
   @media (max-width: 560px) {
     .page { padding: 36px 12px 24px; }
     .header-title { font-size: 38px; }
@@ -730,9 +733,35 @@ style.textContent = `
     .result-breakdown { gap: 32px; }
     .hiw-heading { font-size: 22px; }
     .envelope-frame { height: 250px; }
-    .paper-container { height: 200px; }
-    .paper-text-overlay { font-size: 20px; line-height: 1.3; top: 57%; }
+    .clash-line-text { font-size: 22px; }
     .wordmark { width: 320px !important; }
+  }
+
+  @media (max-width: 1024px) {
+    body {
+      background: var(--dark-bg, #1A1410);
+      overflow: auto;
+    }
+    .desk-wrapper {
+      width: 100%;
+      height: auto;
+      min-height: 100vh;
+      background: none;
+      margin: 0;
+    }
+    .desk-frame-overlay {
+      display: none;
+    }
+    .monitor-screen {
+      position: relative;
+      left: auto;
+      top: auto;
+      width: 100%;
+      height: auto;
+      min-height: 100vh;
+      overflow: visible;
+      border-radius: 0;
+    }
   }
 `;
 document.head.appendChild(style);
@@ -772,8 +801,8 @@ export default function App() {
     const key = `${western.name}-${chinese.name}`;
     const clashLine = CLASH_LINES[key] || "A combination so rare, even the stars are confused.";
     setResult({ western, chinese, clashLine, key });
-    // Animate from back of envelope through opening to paper uncrumple
-    animateFrames(7, 12, () => setPhase(PHASE.REVEALED));
+    // Skip straight to result — no opening animation
+    setPhase(PHASE.REVEALED);
   }
 
   async function handleShare(r) {
@@ -987,10 +1016,7 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="paper-container">
-                <img src={FRAME_PATHS[12]} alt="Uncrumpled paper" className="paper-image" />
-                <div className="paper-text-overlay">"{result.clashLine}"</div>
-              </div>
+              <div className="clash-line-text">"{result.clashLine}"</div>
 
               <button className="share-btn" onClick={() => handleShare(result)}>
                 Share your result
